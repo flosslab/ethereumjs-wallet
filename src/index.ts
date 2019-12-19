@@ -355,7 +355,7 @@ export default class Wallet {
         Buffer.from(password),
         Buffer.from(kdfparams.salt, 'hex'),
         kdfparams.dklen,
-        { N: kdfparams.N, r: kdfparams.R, p: kdfparams.P },
+        { N: kdfparams.n, r: kdfparams.r, p: kdfparams.p },
       )
     } else if (json.crypto.kdf === 'pbkdf2') {
       kdfparams = json.crypto.kdfparams
