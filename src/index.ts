@@ -312,7 +312,12 @@ export default class Wallet {
     }
 
     const kdfparams = json.Crypto.KeyHeader.KdfParams
-    const derivedKey = crypto.scrypt(Buffer.from(password), Buffer.from(json.Crypto.Salt, 'hex'), kdfparams.DkLen, {N: kdfparams.N, r: kdfparams.R, p: kdfparams.P});
+    const derivedKey = crypto.scryptSync(
+      Buffer.from(password),
+      Buffer.from(json.Crypto.Salt, 'hex'),
+      kdfparams.DkLen,
+      { N: kdfparams.N, r: kdfparams.R, p: kdfparams.P },
+    )
 
     const ciphertext = Buffer.from(json.Crypto.CipherText, 'hex')
     const mac = ethUtil.keccak256(Buffer.concat([derivedKey.slice(16, 32), ciphertext]))
@@ -346,7 +351,12 @@ export default class Wallet {
       kdfparams = json.crypto.kdfparams
 
       // FIXME: support progress reporting callback
-      derivedKey = crypto.scrypt(Buffer.from(password), Buffer.from(kdfparams.salt, 'hex'), kdfparams.dklen, {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p});
+      derivedKey = crypto.scryptSync(
+        Buffer.from(password),
+        Buffer.from(kdfparams.salt, 'hex'),
+        kdfparams.dklen,
+        { N: kdfparams.N, r: kdfparams.R, p: kdfparams.P },
+      )
     } else if (json.crypto.kdf === 'pbkdf2') {
       kdfparams = json.crypto.kdfparams
 
@@ -476,7 +486,11 @@ export default class Wallet {
       case KDFFunctions.Scrypt:
         kdfParams = kdfParamsForScrypt(v3Params)
         // FIXME: support progress reporting callback
-        derivedKey = crypto.scrypt(Buffer.from(password), Buffer.from(kdfParams.salt, 'hex'), kdfParams.dklen, {N: kdfParams.n, r: kdfParams.r, p: kdfParams.p});
+        derivedKey = crypto.scryptSync(Buffer.from(password), kdfParams.salt, kdfParams.dklen, {
+          N: kdfParams.n,
+          r: kdfParams.r,
+          p: kdfParams.p,
+        })
         break
       default:
         throw new Error('Unsupported kdf')

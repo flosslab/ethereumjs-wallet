@@ -212,7 +212,11 @@ function fromKryptoKit(entropy: string, password: string): Wallet {
     const checksum = entropy.slice(30, 46)
 
     const salt = kryptoKitBrokenScryptSeed(encryptedSeed)
-    const aesKey = crypto.scrypt(Buffer.from(password, 'utf8'), salt, 32, {N: 16384, r: 8, p: 1});
+    const aesKey = crypto.scryptSync(Buffer.from(password, 'utf8'), salt, 32, {
+      N: 16384,
+      r: 8,
+      p: 1,
+    })
 
     /* FIXME: try to use `crypto` instead of `aesjs`
 
